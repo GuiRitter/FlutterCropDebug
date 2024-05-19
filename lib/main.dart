@@ -1,3 +1,5 @@
+import 'dart:math' show min;
+
 import 'package:flutter/material.dart'
     show
         BuildContext,
@@ -7,9 +9,11 @@ import 'package:flutter/material.dart'
         Scaffold,
         StatelessWidget,
         Widget,
+        debugPrint,
         runApp;
 import 'package:flutter/material.dart' as material_widget;
 import 'package:flutter/widgets.dart' show ConnectionState;
+import 'package:image/image.dart' show copyCrop, decodeJpg;
 import 'package:image_picker/image_picker.dart'
     show ImagePicker, ImageSource, XFile;
 
@@ -69,8 +73,35 @@ class MyHomePage extends StatelessWidget {
       source: ImageSource.camera,
     );
 
-    return material_widget.Image.memory(
+    final photoImage = decodeJpg(
       await photoFile!.readAsBytes(),
+    )!;
+
+    final x = (photoImage.width > photoImage.height)
+        ? ((photoImage.width - photoImage.height) ~/ 2)
+        : 0;
+
+    final y = (photoImage.height > photoImage.width)
+        ? ((photoImage.height - photoImage.width) ~/ 2)
+        : 0;
+
+    final dimension = min(
+      photoImage.width,
+      photoImage.height,
+    );
+
+    final photoImageSquared = copyCrop(
+      photoImage,
+      x: x,
+      y: y,
+      width: dimension,
+      height: dimension,
+    );
+
+    debugPrint('works up to here');
+
+    return material_widget.Image.memory(
+      photoImageSquared.getBytes(),
     );
   }
 }
