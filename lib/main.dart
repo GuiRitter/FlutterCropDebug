@@ -13,7 +13,7 @@ import 'package:flutter/material.dart'
         runApp;
 import 'package:flutter/material.dart' as material_widget;
 import 'package:flutter/widgets.dart' show ConnectionState;
-import 'package:image/image.dart' show copyCrop, decodeJpg;
+import 'package:image/image.dart' show copyCrop, decodeJpg, encodePng;
 import 'package:image_picker/image_picker.dart'
     show ImagePicker, ImageSource, XFile;
 
@@ -98,10 +98,14 @@ class MyHomePage extends StatelessWidget {
       height: dimension,
     );
 
+    final photoImagePNG = encodePng(
+      photoImageSquared,
+    );
+
     debugPrint('works up to here');
 
     return material_widget.Image.memory(
-      photoImageSquared.getBytes(),
+      photoImagePNG,
     );
   }
 }
